@@ -1,0 +1,778 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Lingua Franca: one Center, one deterministic language for humans and agents across crafts.">
+<title>Lingua Franca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0b0d12;
+  --panel:#131419;
+  --card:#17181d;
+  --line:#26272d;
+  --line-2:#34353c;
+  --text:#e7e5f0;
+  --muted:#8b8a94;
+  --dim:#5d5c66;
+  --violet:#a684ff;
+  --violet-soft:#c4b4ff;
+  --cyan:#3fd0e6;
+  --pink:#f06aa8;
+  --own:#a3a2ab;
+  --serif:ui-serif,"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+  --sans:"Geist",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"Geist Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:16px;line-height:1.55;margin:0;padding-inline:20px;padding-block:0 96px;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto}
+.prose{max-width:46rem}
+h1,h2,h3{font-family:var(--serif);font-weight:400;text-wrap:balance;margin:0}
+h1{font-size:clamp(2.6rem,6vw,4rem);line-height:1.05;letter-spacing:-.01em}
+h2{font-size:2rem;line-height:1.15}
+h3{font-size:1.3rem;line-height:1.25}
+p{margin:0}
+section{padding-top:88px;display:flex;flex-direction:column;gap:22px}
+.intro{display:flex;flex-direction:column;gap:12px}
+.intro p{margin:0}
+.path{list-style:none;counter-reset:s;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.path li{counter-increment:s;display:grid;grid-template-columns:28px 160px 1fr;gap:10px;align-items:baseline}
+.path li::before{content:counter(s);font-family:var(--mono);font-size:12px;color:var(--muted)}
+.path a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--line-2);justify-self:start}
+.path a:hover{color:var(--violet-soft)}
+.path span{color:var(--muted);font-size:15px}
+@media (max-width:640px){.path li{grid-template-columns:28px 1fr}.path span{grid-column:2}}
+.puzzle .pc{stroke-width:1.5px;stroke-linejoin:round}
+.puzzle .core{fill:rgba(166,132,255,.35);stroke:#a684ff}
+.puzzle .default{fill:rgba(63,208,230,.25);stroke:#3fd0e6}
+.puzzle .extra{fill:rgba(240,106,168,.04);stroke:#f06aa8}
+.puzzle .own{fill:rgba(163,162,171,.04);stroke:#a3a2ab;stroke-dasharray:4 3}
+.puzzle .neutral{fill:#1b1c24;stroke:#b9b8c2}
+.puzzle .emptyhole{fill:#06070a;stroke:#3a3b45;stroke-width:1.2px;stroke-dasharray:3 3}
+.puzzle .hole{fill:#06070a;stroke:#23242c}
+.puzzle .slabel{font-family:"Geist",sans-serif;font-size:15px;font-weight:500;fill:#e7e5f0;text-anchor:middle}
+.puzzle .rlabel{font-family:"Geist Mono",ui-monospace,monospace;font-size:12px;fill:#c4b4ff;text-anchor:middle}
+.puzzle .rlabel-s{font-family:"Geist Mono",ui-monospace,monospace;font-size:12px;fill:#c4b4ff}
+.puzzle .craft{font-family:"Geist",sans-serif;font-size:17px;fill:#ffffff;text-anchor:middle}
+.puzzle .craft-off{font-family:"Geist",sans-serif;font-size:13px;fill:#6d6c76;text-anchor:middle}
+.puzzle .off{fill:#0e0f14;stroke:#4a4953;stroke-dasharray:3 4}
+.puzzle .spoke-off{stroke:#4a4953;stroke-width:1.2px;stroke-dasharray:3 5}
+.puzzle .spoke{stroke:#a684ff;stroke-width:1.6px}
+.puzzle .eng{fill:#0e0f14;stroke:#e7e5f0;stroke-width:1.4px}
+.puzzle .band{fill:#101218;stroke:#2c2d35}
+.puzzle .center{stroke:#5b4a8f;stroke-width:1.2px}
+.puzzle .s1{stop-color:#3fd0e6;stop-opacity:.20}
+.puzzle .s2{stop-color:#a684ff;stop-opacity:.24}
+.puzzle .s3{stop-color:#f06aa8;stop-opacity:.10}
+.puzzle .s4{stop-color:#12141b;stop-opacity:1}
+.puzzle .g1{stop-color:#8f6bff;stop-opacity:.28}
+.puzzle .g2{stop-color:#8f6bff;stop-opacity:0}
+.puzzle{margin:0;padding:28px 20px;display:flex;flex-direction:column;gap:18px;align-items:center}
+.puzzle > svg{display:block;width:100%;max-width:560px;height:auto}
+.puzzle figcaption{display:flex;flex-direction:column;gap:10px;align-items:center}
+.pkey{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;font-size:13px;color:var(--muted)}
+.pkey span{display:inline-flex;align-items:center;gap:8px}
+.tbd{margin:0;font-size:13px;color:var(--muted);font-style:italic}
+.lead{color:var(--text);font-size:1.12rem;max-width:44rem}
+.muted{color:var(--muted)}
+.small{font-size:13.5px}
+.mono{font-family:var(--mono)}
+code{font-family:var(--mono);font-size:.9em;color:var(--violet-soft)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.caption{font-size:13px;color:var(--muted);text-align:center;max-width:40rem;margin:0 auto}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* hero */
+header{padding-top:96px;display:flex;flex-direction:column;gap:20px}
+
+/* principle tags: neutral, letters carry identity */
+.tag{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:22px;padding:0 6px;border:1px solid var(--line-2);border-radius:5px;background:#1d1e24;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.06em;color:#cfcdd8;vertical-align:middle}
+.tags{display:inline-flex;gap:6px;flex-wrap:wrap;vertical-align:middle}
+.titled{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+/* diagram */
+.diagram{padding:28px 20px 22px;display:flex;flex-direction:column;gap:18px}
+.diagram svg{display:block;width:100%;min-width:680px;height:auto}
+
+/* principles */
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.principle{display:flex;flex-direction:column;gap:10px;min-height:176px}
+.principle .tag{align-self:flex-start}
+.principle h3{font-size:1.15rem}
+.principle p{color:var(--muted);font-size:14px}
+.ladder{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.ladder li{display:flex;gap:8px;align-items:baseline}
+.ladder li span{color:var(--dim);width:12px;flex:none}
+.ladder li:first-child{color:var(--text)}
+
+/* separations */
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.sep h3{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.sep h3 .kind{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--muted)}
+dl.defs{display:grid;grid-template-columns:max-content 1fr;gap:6px 16px;margin:14px 0 0;font-size:14.5px}
+dl.defs dt{font-family:var(--mono);font-size:13px;color:var(--text)}
+dl.defs dd{margin:0;color:var(--muted)}
+
+/* tiers */
+.tiers{display:grid;grid-template-columns:120px repeat(2,minmax(0,1fr));gap:10px;align-items:stretch}
+.tiers .axis{font-family:var(--mono);font-size:11.5px;letter-spacing:.02em;color:var(--muted);display:flex;align-items:flex-end;padding:0 4px 4px}
+.tiers .row-axis{align-items:center}
+.tier{border-radius:10px;padding:16px 18px;border:1px solid var(--c);background:color-mix(in oklab,var(--c) var(--fill,0%),var(--card));display:flex;flex-direction:column;gap:6px}
+.tier b{font-family:var(--serif);font-weight:400;font-size:1.45rem;color:var(--c)}
+.tier .ob{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.tier .cta{font-size:14.5px}
+.core{--c:var(--violet);--fill:16%}
+.default{--c:var(--cyan);--fill:12%}
+.extra{--c:var(--pink);--fill:0%}
+.own{--c:var(--own);--fill:0%}
+.tier.own,.p.own{border-style:dashed}
+
+/* pieces */
+.p{display:inline-flex;align-items:center;gap:7px;font-family:var(--mono);font-size:12.5px;line-height:1.3;padding:6px 10px;border-radius:6px;border:1px solid color-mix(in oklab,var(--c) 70%,transparent);background:color-mix(in oklab,var(--c) var(--fill,0%),transparent);color:var(--text);max-width:100%;overflow-wrap:anywhere}
+.p::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--c);flex:none}
+.p.extra::before,.p.own::before{background:transparent;box-shadow:inset 0 0 0 1.5px var(--c)}
+.p .note{color:var(--muted);font-size:11px}
+.stack{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.toc ol{list-style:none;counter-reset:t;display:flex;flex-wrap:wrap;gap:8px 20px;padding:0;margin:28px 0 0;font-size:14px}
+.toc li{counter-increment:t}
+.toc li::before{content:counter(t) ". ";color:var(--muted);font-family:var(--mono);font-size:12px}
+.toc a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--line-2)}
+.toc a:hover{color:var(--violet-soft)}
+.legend{display:flex;gap:10px 18px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+
+/* layers */
+.layers{display:flex;flex-direction:column}
+.lov{margin:0}
+.lov svg{display:block;width:100%;max-width:720px;height:auto;margin:0 auto}
+.layer{display:block;padding-block:20px}
+.layer > * + *{margin-top:16px}
+.layer > summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:14px}
+.layer > summary::-webkit-details-marker{display:none}
+.layer > summary header{flex:1}
+.layer > summary::after{content:"";width:8px;height:8px;border-right:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);transform:rotate(45deg);transition:transform .15s;flex:none}
+.layer[open] > summary::after{transform:rotate(-135deg)}
+.layer > summary:hover h3{color:var(--violet-soft)}
+.layer + .layer{border-top:2px dotted var(--line-2)}
+.layer:first-child{padding-top:8px}
+.row{display:flex;flex-wrap:wrap;gap:8px}
+.kbtitle{margin:8px 0 0;font-family:var(--sans);font-weight:500;font-size:15px}
+.layer header{padding:0;gap:6px}
+.layer .role{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sub{display:flex;flex-direction:column;gap:10px}
+.sub h4{margin:0;font-family:var(--sans);font-weight:500;font-size:15px;display:flex;align-items:center;gap:10px}
+.sub .trig{font-size:13px;color:var(--muted)}
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.flow{font-family:var(--mono);font-size:12px;color:var(--violet-soft)}
+.kb{display:grid;grid-template-columns:minmax(150px,200px) 1fr;gap:8px 18px;align-items:center}
+.kb .d{font-size:14px;color:var(--muted)}
+.tree{padding:16px 18px;font-size:13px;display:flex;flex-direction:column;gap:6px}
+.tree .root{font-family:var(--mono);color:var(--muted)}
+.tree .row{display:grid;grid-template-columns:24px 190px 1fr;gap:4px 10px;align-items:baseline}
+.tree .br{font-family:var(--mono);color:var(--line-2)}
+.tree .name{font-family:var(--mono);color:var(--text)}
+.tree .dir{color:var(--violet-soft)}
+.tree .d{color:var(--muted)}
+
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{font-family:var(--mono);font-size:12px;letter-spacing:.02em;color:var(--muted);font-weight:400;text-align:left;padding:0 12px 10px 0;border-bottom:1px solid var(--line)}
+td{padding:10px 12px 10px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.kind{color:var(--muted)}
+td.tool{font-family:var(--mono);font-size:12.5px;color:var(--text)}
+td.runs{font-family:var(--mono);font-size:12.5px;color:var(--violet-soft);white-space:nowrap}
+.note-row{display:flex;gap:12px;align-items:flex-start;font-size:14.5px;color:var(--muted)}
+
+/* slot table */
+.slotdesc{display:flex;flex-direction:column;gap:14px;margin-bottom:40px}
+.slotdesc .fam{display:flex;align-items:baseline;gap:12px;margin-top:14px}
+.slotdesc .fam::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--violet);align-self:center}
+.slotdesc .fam b{font-family:var(--serif);font-weight:400;font-size:1.35rem}
+.slotdesc .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.slotdesc .card{display:flex;flex-direction:column;gap:10px}
+.slotdesc h4{margin:0;font-family:var(--sans);font-weight:500;font-size:15px;display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.slotdesc h4 small{font-family:var(--mono);font-size:11px;font-weight:400;color:var(--muted)}
+.slotdesc .card > p{margin:0;font-size:14px;color:var(--muted)}
+.slotdesc .ly{display:grid;grid-template-columns:78px 1fr;gap:6px 10px;align-items:start}
+.slotdesc .ly > span:nth-child(odd){font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:7px}
+.slotdesc .ly .row{gap:6px}
+@media (max-width:640px){.slotdesc .grid{grid-template-columns:1fr}}
+.defs-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.defs-grid .card{display:flex;flex-direction:column;gap:6px}
+.defs-grid .term{font-family:var(--sans);font-weight:500;font-size:15px;color:var(--text)}
+.defs-grid p{font-size:14px;color:var(--text)}
+
+a:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+
+@media (max-width:900px){
+  .grid4,.defs-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .skills{grid-template-columns:1fr}
+  .tree .row{grid-template-columns:24px 1fr}
+  .tree .d{grid-column:2}
+}
+@media (max-width:560px){
+  body{padding-inline:16px}
+  .grid4,.grid2,.defs-grid{grid-template-columns:1fr}
+  .principle{min-height:0}
+  .tiers{grid-template-columns:1fr 1fr}
+  .tiers .corner,.tiers .row-axis{display:none}
+  .kb{grid-template-columns:1fr}
+  .kb .d{margin-bottom:8px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .orb-glow{animation:breathe 6s ease-in-out infinite}
+  @keyframes breathe{50%{opacity:.55}}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Lingua Franca</h1>
+  <div class="prose intro lead">
+    <p>Today, work moves between crafts by hand. Product writes a ticket, Design hands over a file, and Engineering asks in chat what was meant. Ticket quality varies from project to project. Each pair of crafts has its own way to talk, and every hand-over loses a little meaning.</p>
+    <p>Agents amplify this. They read and write as fast as people, or faster, but they cannot read between the lines. They need facts that are written down, in one place. And more importantly: with consistent naming. A teaser is a component is a module is an editorial is a … thing. How is an agent supposed to know what you're talking about when reading the ticket?</p>
+    <p>We need a common language, for humans and agents.</p>
+    <p>Lingua Franca is that language.</p>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Contents"><ol><li><a href="#center">The Center</a></li><li><a href="#principles">Principles</a></li><li><a href="#concepts">Slots and Pieces</a></li><li><a href="#tiers">Tiers</a></li><li><a href="#layers">Layers</a></li><li><a href="#modules">Slot Catalogue</a></li></ol></nav>
+
+<!-- WHY -->
+<section id="center">
+  <h2>The Center</h2>
+  <div class="prose intro">
+    <p>Each craft has its own language. Product talks in features and outcomes, Design in components and flows, Engineering in modules and APIs. Lingua Franca does not replace these languages. It places the crafts around one common Center, and each craft connects to it on its own. What must be shared lives in the Center. Everything else stays with the craft.</p>
+  </div>
+  <div class="panel diagram">
+    <div class="scroll">
+      <svg viewBox="0 0 900 560" role="img" aria-label="Product, Design and Engineering each connect to the Center. Engineering is in focus; Product and Design are greyed out.">
+        <defs>
+          <radialGradient id="orb" cx="38%" cy="32%" r="75%">
+            <stop offset="0" stop-color="#f4f2ff"/>
+            <stop offset=".28" stop-color="#5fe3f2"/>
+            <stop offset=".6" stop-color="#8f6bff"/>
+            <stop offset=".85" stop-color="#e46fb4"/>
+            <stop offset="1" stop-color="#3a2a66"/>
+          </radialGradient>
+          <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+            <stop offset="0" stop-color="#8f6bff" stop-opacity=".45"/>
+            <stop offset="1" stop-color="#8f6bff" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- spokes -->
+        <line x1="205" y1="148" x2="395" y2="240" stroke="#4a4953" stroke-width="1.2" stroke-dasharray="3 5"/>
+        <line x1="695" y1="148" x2="505" y2="240" stroke="#4a4953" stroke-width="1.2" stroke-dasharray="3 5"/>
+        <line x1="450" y1="352" x2="450" y2="434" stroke="#a684ff" stroke-width="1.6"/>
+
+        <!-- orb -->
+        <circle class="orb-glow" cx="450" cy="282" r="130" fill="url(#glow)"/>
+        <circle cx="450" cy="282" r="70" fill="url(#orb)"/>
+
+        <!-- product (greyed) -->
+        <g font-family="Geist Mono, ui-monospace, monospace">
+          <rect x="70" y="18" width="200" height="44" rx="8" fill="#101116" stroke="#26272d"/>
+          <text x="170" y="36" text-anchor="middle" font-size="10.5" fill="#5d5c66">Local · Product</text>
+          <text x="170" y="52" text-anchor="middle" font-size="11" font-family="Geist, sans-serif" fill="#5d5c66">PM tool, ticket bots</text>
+        </g>
+        <circle cx="170" cy="120" r="42" fill="#0e0f14" stroke="#4a4953" stroke-dasharray="3 4"/>
+        <text x="170" y="125" text-anchor="middle" font-family="Geist, sans-serif" font-size="14" fill="#6d6c76">Product</text>
+
+        <!-- design (greyed) -->
+        <g font-family="Geist Mono, ui-monospace, monospace">
+          <rect x="630" y="18" width="200" height="44" rx="8" fill="#101116" stroke="#26272d"/>
+          <text x="730" y="36" text-anchor="middle" font-size="10.5" fill="#5d5c66">Local · Design</text>
+          <text x="730" y="52" text-anchor="middle" font-size="11" font-family="Geist, sans-serif" fill="#5d5c66">design system library</text>
+        </g>
+        <circle cx="730" cy="120" r="42" fill="#0e0f14" stroke="#4a4953" stroke-dasharray="3 4"/>
+        <text x="730" y="125" text-anchor="middle" font-family="Geist, sans-serif" font-size="14" fill="#6d6c76">Design</text>
+
+        <!-- connection labels on greyed spokes -->
+        <g font-family="Geist Mono, ui-monospace, monospace">
+          <rect x="222" y="176" width="150" height="40" rx="8" fill="#101116" stroke="#26272d"/>
+          <text x="297" y="192" text-anchor="middle" font-size="10" fill="#5d5c66">Connection</text>
+          <text x="297" y="207" text-anchor="middle" font-size="11" font-family="Geist, sans-serif" fill="#5d5c66">ticketing</text>
+          <rect x="528" y="176" width="150" height="40" rx="8" fill="#101116" stroke="#26272d"/>
+          <text x="603" y="192" text-anchor="middle" font-size="10" fill="#5d5c66">Connection</text>
+          <text x="603" y="207" text-anchor="middle" font-size="11" font-family="Geist, sans-serif" fill="#5d5c66">design bridge</text>
+        </g>
+
+        <!-- center panel -->
+        <g font-family="Geist Mono, ui-monospace, monospace">
+          <rect x="566" y="238" width="296" height="90" rx="8" fill="#121318" stroke="#34353c"/>
+          <text x="582" y="260" font-size="10.5" fill="#a684ff">Center</text>
+          <text x="582" y="278" font-size="12.5" font-family="Geist, sans-serif" fill="#e7e5f0">shared, deterministic domain language</text>
+          <text x="582" y="300" font-size="11" font-family="Geist, sans-serif" fill="#8b8a94">glossary, spec format, docs structure,</text>
+          <text x="582" y="316" font-size="11" font-family="Geist, sans-serif" fill="#8b8a94">ADRs, DoR / DoD, reverse prompting</text>
+          <rect x="818" y="247" width="30" height="18" rx="4" fill="#1d1e24" stroke="#34353c"/>
+          <text x="833" y="260" text-anchor="middle" font-size="10" fill="#cfcdd8">DL</text>
+        </g>
+
+        <!-- engineering connection -->
+        <g font-family="Geist Mono, ui-monospace, monospace">
+          <rect x="206" y="366" width="240" height="58" rx="8" fill="#121318" stroke="#34353c"/>
+          <text x="326" y="383" text-anchor="middle" font-size="10" fill="#a684ff">Connection</text>
+          <text x="326" y="399" text-anchor="middle" font-size="11" font-family="Geist, sans-serif" fill="#e7e5f0">agent entry point, design intake,</text>
+          <text x="326" y="414" text-anchor="middle" font-size="11" font-family="Geist, sans-serif" fill="#e7e5f0">ticket intake, external systems</text>
+        </g>
+
+        <!-- engineering node -->
+        <circle cx="450" cy="480" r="46" fill="#0e0f14" stroke="#e7e5f0" stroke-width="1.4"/>
+        <text x="450" y="485" text-anchor="middle" font-family="Geist, sans-serif" font-size="14" fill="#ffffff">Engineering</text>
+        <g font-family="Geist Mono, ui-monospace, monospace">
+          <rect x="522" y="446" width="240" height="72" rx="8" fill="#121318" stroke="#34353c"/>
+          <text x="538" y="466" font-size="10.5" fill="#a684ff">Local · Engineering</text>
+          <text x="538" y="484" font-size="11" font-family="Geist, sans-serif" fill="#e7e5f0">language styles, tests,</text>
+          <text x="538" y="500" font-size="11" font-family="Geist, sans-serif" fill="#e7e5f0">scaffolding, guardrails</text>
+          <rect x="716" y="455" width="32" height="18" rx="4" fill="#1d1e24" stroke="#34353c"/>
+          <text x="732" y="468" text-anchor="middle" font-size="10" fill="#cfcdd8">MO</text>
+        </g>
+      </svg>
+    </div>
+    <p class="caption">Every craft connects to the Center, never to each other.</p>
+  </div>
+  <div class="prose intro">
+    <p>The Center holds what all crafts share: the domain language, the history and reasoning behind decisions, common agreements like ticket and spec formats, DoR, DoD, and more. Each craft connects to it, and keeps its own tools and rules locally.</p>
+    <p>This page starts with Engineering, the first craft to connect. Read it in order:</p>
+    <ol class="path">
+      <li><a href="#principles">Principles</a><span>the rules every part follows.</span></li>
+      <li><a href="#concepts">Slots and Pieces</a><span>needs, and what fills them.</span></li>
+      <li><a href="#tiers">Tiers</a><span>what is mandatory and what is optional.</span></li>
+      <li><a href="#layers">Layers</a><span>the four jobs a Piece can do.</span></li>
+      <li><a href="#modules">Slot Catalogue</a><span>every Engineering slot, one by one.</span></li>
+    </ol>
+    <p>You do not need to adopt everything at once. Start with the mandatory slots, then add what helps your project.</p>
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section id="principles">
+  <h2>Principles</h2>
+  <div class="prose intro">
+    <p>Before we look at the parts, here is what holds them together. Lingua Franca follows eight principles. They explain why each part exists, and why it looks the way it does.</p>
+    <p>Each principle has a short tag, like AA or DD. Later on the page, a tag next to a layer or slot tells you which principle it comes from.</p>
+  </div>
+  <div class="grid4">
+    <article class="card principle"><span class="tag">AA</span><h3>Agent-agnosticity</h3><p>No lock-in to one agent tool.</p></article>
+    <article class="card principle"><span class="tag">WI</span><h3>Workflow independence</h3><p>No fixed way of working.</p></article>
+    <article class="card principle"><span class="tag">MO</span><h3>Modularity</h3><p>Adopt or skip each slot alone.</p></article>
+    <article class="card principle"><span class="tag">PD</span><h3>Progressive disclosure</h3><p>Small entry point, detail on demand.</p></article>
+    <article class="card principle"><span class="tag">DL</span><h3>Deterministic language</h3><p>One name per concept.</p></article>
+    <article class="card principle"><span class="tag">RP</span><h3>Reverse prompting</h3><p>The agent asks, the human thinks.</p></article>
+    <article class="card principle"><span class="tag">DD</span><h3>Derivation over duplication</h3><p>Each fact is written once. Every copy is derived.</p></article>
+    <article class="card principle"><span class="tag">EL</span><h3>Enforcement Ladder</h3><p>Push each rule as high as it goes:</p>
+      <ol class="ladder">
+        <li><span>1</span>impossible (derived)</li>
+        <li><span>2</span>deterministic check</li>
+        <li><span>3</span>probabilistic check</li>
+        <li><span>4</span>written only</li>
+      </ol>
+    </article>
+  </div>
+  <p class="tbd">More info TBD</p>
+</section>
+
+<!-- CONCEPTS -->
+<section id="concepts">
+  <div class="titled"><h2>Slots and Pieces</h2><span class="tag">MO</span></div>
+  <div class="prose intro">
+    <p>Lingua Franca works like a jigsaw puzzle. The Center and each craft have holes: things a project needs, like a shared domain language or a way to test code. We call a hole a Slot. What fills it is a Piece.</p>
+  </div>
+  <div class="defs-grid">
+    <div class="card"><span class="term">Slot</span><p>A need. A place in the system that Pieces fill.</p></div>
+    <div class="card"><span class="term">Piece</span><p>What fills the slot: a KB file, a skill, a check, a tool.</p></div>
+    <div class="card"><span class="term">Layer</span><p>Where a Piece lives: Context (describe), Skills (prescribe), Guardrails (correct), Tools (connect).</p></div>
+    <div class="card"><span class="term">Family</span><p>Where a slot lives, and who it serves. Center: shared by all crafts. Connection: for communication between crafts. Local: specific to one craft.</p></div>
+  </div>
+  <figure class="panel puzzle">
+    <svg viewBox="0 0 760 980" role="img" aria-label="Product, Design and Engineering each connect to the Center orb. Center slots sit in the orb, Connection slots on the bridge to Engineering, Local slots inside the Engineering orb.">
+<defs>
+<radialGradient id="pz-orb" cx="50%" cy="50%" r="50%">
+<stop offset="0%" class="s1"></stop>
+<stop offset="45%" class="s2"></stop>
+<stop offset="78%" class="s3"></stop>
+<stop offset="100%" class="s4"></stop>
+</radialGradient>
+<radialGradient id="pz-glow" cx="50%" cy="50%" r="50%">
+<stop offset="0%" class="g1"></stop>
+<stop offset="100%" class="g2"></stop>
+</radialGradient>
+</defs>
+<line x1="148" y1="116" x2="250" y2="190" class="spoke"></line>
+<line x1="612" y1="116" x2="510" y2="190" class="spoke"></line>
+<line x1="380" y1="460" x2="380" y2="600" class="spoke"></line>
+
+<circle cx="110" cy="90" r="46" class="eng"></circle>
+<text x="110" y="95" class="craft">Product</text>
+<circle cx="650" cy="90" r="46" class="eng"></circle>
+<text x="650" y="95" class="craft">Design</text>
+
+<circle cx="380" cy="285" r="225" fill="url(#pz-glow)"></circle>
+<circle cx="380" cy="285" r="175" fill="url(#pz-orb)" class="center"></circle>
+<text x="380" y="150" class="rlabel">Center</text>
+
+<text x="72" y="462" class="rlabel-s">Connection</text>
+<rect x="50" y="472" width="660" height="100" rx="14" class="band"></rect>
+
+<circle cx="380" cy="780" r="180" class="eng"></circle>
+<text x="380" y="638" class="craft">Engineering</text>
+<text x="380" y="658" class="rlabel">Local</text>
+
+<text x="295" y="205" class="slabel">Domain language</text>
+<rect x="241" y="215" width="108" height="40" rx="6" class="hole"></rect>
+<g transform="translate(247,221)"><circle cx="14" cy="14" r="13" class="pc core"></circle></g>
+<g transform="translate(281,221)"><polygon points="14,1 27,26 1,26" class="pc core"></polygon></g>
+<g transform="translate(315,221)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc core"></rect></g>
+
+<text x="465" y="205" class="slabel">Knowledge structure</text>
+<rect x="411" y="215" width="108" height="40" rx="6" class="hole"></rect>
+<g transform="translate(417,221)"><circle cx="14" cy="14" r="13" class="pc core"></circle></g>
+<g transform="translate(451,221)"><polygon points="14,1 27,26 1,26" class="pc core"></polygon></g>
+<g transform="translate(485,221)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc core"></rect></g>
+
+<text x="295" y="295" class="slabel">Reverse prompting</text>
+<rect x="275" y="305" width="40" height="40" rx="6" class="hole"></rect>
+<g transform="translate(281,311)"><polygon points="14,1 27,26 1,26" class="pc default"></polygon></g>
+
+<text x="465" y="295" class="slabel">Change review</text>
+<rect x="428" y="305" width="74" height="40" rx="6" class="hole"></rect>
+<g transform="translate(434,311)"><polygon points="14,1 27,26 1,26" class="pc core"></polygon></g>
+<g transform="translate(468,311)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc core"></rect></g>
+
+<text x="140" y="500" class="slabel">Agent entry point</text>
+<rect x="86.0" y="510" width="108" height="40" rx="6" class="hole"></rect>
+<g transform="translate(92.0,516)"><circle cx="14" cy="14" r="13" class="pc core"></circle></g>
+<g transform="translate(126.0,516)"><polygon points="14,1 27,26 1,26" class="pc core"></polygon></g>
+<g transform="translate(160.0,516)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc core"></rect></g>
+
+<text x="300" y="500" class="slabel">Design intake</text>
+<rect x="263.0" y="510" width="74" height="40" rx="6" class="hole"></rect>
+<g transform="translate(269.0,516)"><polygon points="14,1 27,26 1,26" class="pc extra"></polygon></g>
+<g transform="translate(303.0,516)"><polygon points="14.0,1.0 25.3,7.5 25.3,20.5 14.0,27.0 2.7,20.5 2.7,7.5" class="pc extra"></polygon></g>
+
+<text x="460" y="500" class="slabel">Ticket intake</text>
+<rect x="423.0" y="510" width="74" height="40" rx="6" class="hole"></rect>
+<g transform="translate(429.0,516)"><polygon points="14,1 27,26 1,26" class="pc extra"></polygon></g>
+<g transform="translate(463.0,516)"><polygon points="14.0,1.0 25.3,7.5 25.3,20.5 14.0,27.0 2.7,20.5 2.7,7.5" class="pc extra"></polygon></g>
+
+<text x="620" y="500" class="slabel">External systems</text>
+<rect x="583.0" y="510" width="74" height="40" rx="6" class="hole"></rect>
+<g transform="translate(589.0,516)"><circle cx="14" cy="14" r="13" class="pc own"></circle></g>
+<g transform="translate(623.0,516)"><polygon points="14.0,1.0 25.3,7.5 25.3,20.5 14.0,27.0 2.7,20.5 2.7,7.5" class="pc own"></polygon></g>
+
+<text x="310" y="690" class="slabel">Language style</text>
+<rect x="273.0" y="700" width="74" height="40" rx="6" class="hole"></rect>
+<g transform="translate(279.0,706)"><polygon points="14,1 27,26 1,26" class="pc default"></polygon></g>
+<g transform="translate(313.0,706)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc default"></rect></g>
+
+<text x="450" y="690" class="slabel">Releases</text>
+<rect x="413.0" y="700" width="74" height="40" rx="6" class="hole"></rect>
+<g transform="translate(419.0,706)"><circle cx="14" cy="14" r="13" class="pc default"></circle></g>
+<g transform="translate(453.0,706)"><polygon points="14,1 27,26 1,26" class="pc extra"></polygon></g>
+
+<text x="310" y="770" class="slabel">Testing</text>
+<rect x="256.0" y="780" width="108" height="40" rx="6" class="hole"></rect>
+<g transform="translate(262.0,786)"><polygon points="14,1 27,26 1,26" class="pc default"></polygon></g>
+<g transform="translate(296.0,786)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc default"></rect></g>
+<g transform="translate(330.0,786)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc extra"></rect></g>
+
+<text x="450" y="770" class="slabel">Repo structure</text>
+<rect x="396.0" y="780" width="108" height="40" rx="6" class="hole"></rect>
+<g transform="translate(402.0,786)"><circle cx="14" cy="14" r="13" class="pc default"></circle></g>
+<g transform="translate(436.0,786)"><polygon points="14,1 27,26 1,26" class="pc extra"></polygon></g>
+<g transform="translate(470.0,786)"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc extra"></rect></g>
+
+<text x="310" y="850" class="slabel">Accessibility</text>
+<rect x="290.0" y="860" width="40" height="40" rx="6" class="hole"></rect>
+<g transform="translate(296.0,866)"><polygon points="14,1 27,26 1,26" class="pc extra"></polygon></g>
+
+<text x="450" y="850" class="slabel">Scaffolding</text>
+<rect x="430.0" y="860" width="40" height="40" rx="6" class="hole"></rect>
+<g transform="translate(436.0,866)"><polygon points="14,1 27,26 1,26" class="pc own"></polygon></g>
+</svg>
+    <figcaption><div class="pkey"><span><svg width="22" height="22" viewBox="-1 -1 30 30" aria-hidden="true"><circle cx="14" cy="14" r="13" class="pc neutral"/></svg>Context</span><span><svg width="22" height="22" viewBox="-1 -1 30 30" aria-hidden="true"><polygon points="14,1 27,26 1,26" class="pc neutral"/></svg>Skills</span><span><svg width="22" height="22" viewBox="-1 -1 30 30" aria-hidden="true"><rect x="1.5" y="1.5" width="25" height="25" rx="2" class="pc neutral"/></svg>Guardrails</span><span><svg width="22" height="22" viewBox="-1 -1 30 30" aria-hidden="true"><polygon points="14.0,1.0 25.3,7.5 25.3,20.5 14.0,27.0 2.7,20.5 2.7,7.5" class="pc neutral"/></svg>Tools</span></div></figcaption>
+  </figure>
+  <p class="prose">A slot usually needs more than one Piece to work, often spread across several layers. Lingua Franca ships sensible defaults for most of them, but you're free to swap any of them for something that suits your project better.</p>
+
+</section>
+
+<!-- TIERS -->
+<section id="tiers">
+  <h2>Tiers</h2>
+  <div class="prose intro">
+    <p>Not every Slot is equally required. Some are the minimum the Center needs to stay readable, so every project has them. Others are optional, and you pick them when they help.</p>
+    <p>The tier also says who provides the Piece: Lingua Franca (LF), or you (BYO, bring your own).</p>
+  </div>
+  <div class="tiers">
+    <div class="axis corner"></div>
+    <div class="axis">Lingua Franca provides it</div>
+    <div class="axis">Bring your own</div>
+    <div class="axis row-axis">Mandatory</div>
+    <div class="tier core"><b>Mandatory</b><span class="ob">LF</span><span class="cta">→ Take these as-is.</span></div>
+    <div class="tier default"><b>Mandatory (+BYO)</b><span class="ob">LF or BYO</span><span class="cta">→ Take defaults or exchange for your own.</span></div>
+    <div class="axis row-axis">Optional</div>
+    <div class="tier extra"><b>Optional</b><span class="ob">LF</span><span class="cta">→ Pick your extras.</span></div>
+    <div class="tier own"><b>At will</b><span class="ob">BYO</span><span class="cta">→ Add your own flavor and specialties.</span></div>
+  </div>
+  <p class="prose">We keep the mandatory part as small as we can: just what the Center needs to stay readable. Everything else is yours to pick, skip or reshape.</p>
+</section>
+
+<!-- LAYERS -->
+<section id="layers">
+  <h2>Layers</h2>
+  <div class="prose intro">
+    <p>Every Piece does one of four jobs. It describes how things are, prescribes what to do, checks that it was done right, or connects to a system outside the repo. That job is the Piece's Layer.</p>
+    <p>The graphic shows how the layers work together. Open a layer below to see its Pieces.</p>
+  </div>
+  <figure class="lov">
+    <svg viewBox="0 0 720 250" role="img" aria-label="Layers overview. Skills prescribe; they point to the Context layer and use Tools. Guardrails check the output.">
+      <defs><marker id="lovh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8b8a94"/></marker></defs>
+      <g font-family="Geist Mono,ui-monospace,monospace" font-size="11" fill="#8b8a94">
+        <line x1="270" y1="55" x2="206" y2="55" stroke="#5a5a64" marker-end="url(#lovh)"/><text x="238" y="46" text-anchor="middle">point to</text>
+        <line x1="450" y1="55" x2="514" y2="55" stroke="#5a5a64" marker-end="url(#lovh)"/><text x="482" y="46" text-anchor="middle">use</text>
+        <line x1="360" y1="90" x2="360" y2="154" stroke="#5a5a64" marker-end="url(#lovh)"/><text x="368" y="126">guide</text>
+        <line x1="520" y1="185" x2="456" y2="185" stroke="#5a5a64" marker-end="url(#lovh)"/><text x="488" y="176" text-anchor="middle">check</text>
+      </g>
+      <g font-family="Geist,system-ui,sans-serif">
+        <rect x="20" y="20" width="180" height="70" rx="10" fill="#17181d" stroke="#34353c"/>
+        <text x="110" y="50" text-anchor="middle" fill="#e7e5f0" font-size="15">Context</text>
+        <text x="110" y="70" text-anchor="middle" fill="#8b8a94" font-size="12">describes</text>
+        <rect x="270" y="20" width="180" height="70" rx="10" fill="#17181d" stroke="#34353c"/>
+        <text x="360" y="50" text-anchor="middle" fill="#e7e5f0" font-size="15">Skills</text>
+        <text x="360" y="70" text-anchor="middle" fill="#8b8a94" font-size="12">prescribe</text>
+        <rect x="520" y="20" width="180" height="70" rx="10" fill="#17181d" stroke="#34353c"/>
+        <text x="610" y="50" text-anchor="middle" fill="#e7e5f0" font-size="15">Tools</text>
+        <text x="610" y="70" text-anchor="middle" fill="#8b8a94" font-size="12">connect</text>
+        <rect x="270" y="160" width="180" height="50" rx="10" fill="none" stroke="#34353c" stroke-dasharray="4 4"/>
+        <text x="360" y="190" text-anchor="middle" fill="#8b8a94" font-size="13">Output: code, docs</text>
+        <rect x="520" y="150" width="180" height="70" rx="10" fill="#17181d" stroke="#34353c"/>
+        <text x="610" y="180" text-anchor="middle" fill="#e7e5f0" font-size="15">Guardrails</text>
+        <text x="610" y="200" text-anchor="middle" fill="#8b8a94" font-size="12">correct</text>
+      </g>
+    </svg>
+  </figure>
+
+  <div class="layers">
+    <!-- SKILLS -->
+    <details class="layer">
+      <summary><header><div class="titled"><h3>Skills Layer</h3><span class="tags"><span class="tag">AA</span><span class="tag">PD</span></span></div><span class="role">Prescriptive</span></header></summary>
+      <div class="skills">
+        <div class="sub">
+          <h4>Ambient Skills <span class="tag">MO</span></h4>
+          <p class="trig">Triggered automatically, e.g. by file type or a recognized activity. Holds rules for editing and auditing.</p>
+          <div class="stack">
+            <span class="p core">lingua-franca</span>
+            <span class="p core">lingua-domain-model</span>
+            <span class="p core">lingua-agent-prose</span>
+            <span class="p core">lingua-prose</span>
+            <span class="p default">lingua-typescript-style</span>
+            <span class="p default">lingua-specs</span>
+            <span class="p default">lingua-tests</span>
+            <span class="p default">lingua-code-workflow</span>
+            <span class="p extra">lingua-repo-structure</span>
+            <span class="p extra">lingua-react-style</span>
+            <span class="p extra">lingua-css-style</span>
+            <span class="p extra">lingua-component-docs</span>
+            <span class="p extra">lingua-module-design</span>
+            <span class="p extra">lingua-public-apis</span>
+            <span class="p own">*-style</span>
+            <span class="p own">…</span>
+          </div>
+        </div>
+        <div class="sub">
+          <h4>Task Skills <span class="tag">WI</span></h4>
+          <p class="trig">Triggered by intent, e.g. a command. Holds steps and completion criteria.</p>
+          <div class="stack">
+            <span class="p core">lingua-lint-knowledge <span class="note">→ DoD</span></span>
+            <span class="p core">lingua-review-changes <span class="note">→ DoD</span></span>
+            <span class="p core">lingua-check-compliance</span>
+            <span class="p default">lingua-grill-me <span class="note">→ DoR</span> <span class="tag" style="height:18px;min-width:28px;font-size:10px">RP</span></span>
+            <span class="p default">lingua-check-readiness <span class="note">→ DoR</span></span>
+            <span class="p default">lingua-check-completeness <span class="note">→ DoD</span></span>
+            <span class="p extra">lingua-ask</span>
+            <span class="p extra">lingua-write-a-ticket</span>
+            <span class="p extra">lingua-implement-a-ticket</span>
+            <span class="p extra">lingua-fix-a-bug</span>
+            <span class="p extra">lingua-take-in-design</span>
+            <span class="p extra">lingua-verify-design</span>
+            <span class="p extra">lingua-check-a11y</span>
+            <span class="p extra">lingua-land-work</span>
+            <span class="p extra">lingua-release</span>
+            <span class="p extra">lingua-add-a-package</span>
+            <span class="p own">scaffold-a-* <span class="tag" style="height:18px;min-width:28px;font-size:10px">DD</span></span>
+            <span class="p own">(project-specific flows)</span>
+          </div>
+        </div>
+      </div>
+      
+    </details>
+
+    <!-- CONTEXT -->
+    <details class="layer">
+      <summary><header><div class="titled"><h3>Context Layer</h3><span class="tags"><span class="tag">PD</span><span class="tag">DD</span></span></div><span class="role">Descriptive</span></header></summary>
+      <p class="small muted">Code and skills point to the Knowledge Base instead of copying from it, so every fact lives in one place.</p>
+      <div class="tree card" role="list" aria-label="Knowledge Base file tree">
+        <div class="root">repo/</div>
+        <div class="row" role="listitem"><span class="br">├─</span><span class="name">AGENTS.md</span><span class="d">Only what is needed for every task. Points to the index for everything else.</span></div>
+        <div class="row" role="listitem"><span class="br">├─</span><span class="name dir">knowledge-for-agents/</span><span class="d">The Context blocks below. AGENTS.md points here.</span></div>
+        <div class="row" role="listitem"><span class="br">└─</span><span class="name dir">knowledge-for-humans/</span><span class="d">Kept apart from agents on purpose. No optimization necessary. References agent knowledge.</span></div>
+      </div>
+      <h4 class="kbtitle">Knowledge Base blocks</h4>
+      <p class="small muted">Each block describes one slot and carries its name, so it's easy to see what belongs where.</p>
+      <div class="kb">
+        <span class="p core">Domain Language <span class="tag" style="height:18px;min-width:28px;font-size:10px">DL</span></span><span class="d">The core “Lingua Franca” between agents and humans, as well as between humans (e.g. with the client).</span>
+        <span class="p core">Knowledge Structure</span><span class="d">How Lingua Franca is applied here: which layers and categories exist, and why.</span>
+        <span class="p default">Repo Structure</span><span class="d">How is the repo structured, what packages exist? What is the purpose of each?</span>
+        <span class="p default">Design Reference</span><span class="d">Visual design documentation (in-repo; synced from Figma etc.).</span>
+        <span class="p default">Releases</span><span class="d">How does work reach the environments?</span>
+        <span class="p default">Builds</span><span class="d">How are the project’s artifacts built?</span>
+        <span class="p default">Reasoning</span><span class="d">Why things are as they are. Constraints for external, immutable decisions; ADRs for internal, revisable decisions.</span>
+        <span class="p default">DoR</span><span class="d">Definition of Ready: when work may start (in-repo; synced from PM tool).</span>
+        <span class="p default">DoD</span><span class="d">Definition of Done: when work counts as finished (in-repo; synced from PM tool).</span>
+        <span class="p own">External Systems</span><span class="d">What the project talks to outside the repo.</span>
+      </div>
+    </details>
+
+    <!-- GUARDRAILS -->
+    <details class="layer">
+      <summary><header><div class="titled"><h3>Guardrails Layer</h3><span class="tags"><span class="tag">EL</span></span></div><span class="role">Corrective</span></header></summary>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>Guardrail</th><th>Kind</th><th>Implemented by</th><th>Runs at</th></tr></thead>
+          <tbody>
+            <tr><td><span class="p core">Knowledge Linting</span></td><td class="kind">probabilistic + deterministic</td><td class="tool">skill + scripts</td><td class="runs">review</td></tr>
+            <tr><td><span class="p core">Change Review</span></td><td class="kind">probabilistic</td><td class="tool">lingua-review-changes</td><td class="runs">review</td></tr>
+            <tr><td><span class="p default">Spec Linting</span></td><td class="kind">probabilistic + deterministic</td><td class="tool">skill + scripts</td><td class="runs">review</td></tr>
+            <tr><td><span class="p default">Code Linting</span></td><td class="kind">deterministic</td><td class="tool">oxlint, eslint</td><td class="runs">hook, CI</td></tr>
+            <tr><td><span class="p default">Formatting</span></td><td class="kind">deterministic</td><td class="tool">oxfmt, prettier</td><td class="runs">hook, CI</td></tr>
+            <tr><td><span class="p default">Typechecking</span></td><td class="kind">deterministic</td><td class="tool">tsc, tsgo</td><td class="runs">CI</td></tr>
+            <tr><td><span class="p default">Unit Tests</span></td><td class="kind">deterministic</td><td class="tool">vitest</td><td class="runs">CI</td></tr>
+            <tr><td><span class="p extra">Structural Linting</span></td><td class="kind">deterministic</td><td class="tool">fallow, dependency-cruiser, knip, …</td><td class="runs">CI</td></tr>
+            <tr><td><span class="p extra">Security Checks</span></td><td class="kind">deterministic</td><td class="tool">snyk, checkmarx, …</td><td class="runs">CI</td></tr>
+            <tr><td><span class="p extra">Integration Tests</span></td><td class="kind">deterministic</td><td class="tool">vitest (+ playwright, etc.)</td><td class="runs">CI</td></tr>
+            <tr><td><span class="p extra">Commit &amp; PR Title Checks</span></td><td class="kind">deterministic</td><td class="tool">commitlint, …</td><td class="runs">hook, CI</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </details>
+
+    <!-- TOOLS -->
+    <details class="layer">
+      <summary><header><div class="titled"><h3>Tools Layer</h3><span class="tags"><span class="tag">AA</span></span></div><span class="role">Connective · MCPs / CLIs</span></header></summary>
+      <div class="row">
+        <span class="p extra">figma</span>
+        <span class="p own">ticketing system</span>
+        <span class="p own">external systems</span>
+        <span class="p own">…</span>
+      </div>
+      <p class="flow">→ skills can use tools</p>
+    </details>
+  </div>
+</section>
+
+<!-- CATALOGUE -->
+<section id="modules">
+  <h2>Slot Catalogue</h2>
+  <div class="prose intro">
+    <p>Now the parts come together. Below is every Engineering Slot, grouped by Family: first the Center, then the Connection, then what stays Local.</p>
+    <p>Each card says what the Slot is for, and which Pieces fill it, sorted by Layer.</p>
+  </div>
+  <div class="legend">
+    <span class="p core">Mandatory</span><span class="p default">Mandatory (+BYO)</span><span class="p extra">Optional</span><span class="p own">At will</span>
+  </div>
+  <div class="slotdesc"></div>
+</section>
+
+</div>
+
+<script>
+// [slot, tier, context, skills, guardrails, tools]; "x:" marks an optional extra Piece
+const FAMILIES = [
+  ["Center", "Keeps the Center trustworthy.", [
+    ["Domain language", "core", ["Domain Language"], ["lingua-domain-model", "lingua-prose"], ["Change Review"], []],
+    ["Knowledge structure", "core", ["Knowledge Structure"], ["lingua-agent-prose", "lingua-lint-knowledge"], ["Knowledge Linting"], []],
+    ["Reasoning", "default", ["Reasoning"], [], [], []],
+    ["Spec format", "default", [], ["lingua-specs"], ["Spec Linting"], []],
+    ["Reverse Prompting", "default", [], ["lingua-grill-me"], [], []],
+    ["DoR", "default", ["DoR"], ["lingua-check-readiness"], [], []],
+    ["DoD", "default", ["DoD"], ["lingua-check-completeness"], [], []],
+    ["Change review", "core", [], ["lingua-review-changes"], ["Change Review"], []],
+  ]],
+  ["Connection", "Carries a craft’s traffic to and from the Center. Engineering ↔ Center.", [
+    ["Agent entry point", "core", ["AGENTS.md"], ["lingua-franca", "lingua-check-compliance"], ["Knowledge Linting"], []],
+    ["Design intake", "extra", [], ["lingua-take-in-design", "lingua-verify-design"], [], ["figma"]],
+    ["Ticket intake", "extra", [], ["lingua-write-a-ticket", "lingua-implement-a-ticket"], [], ["ticketing system"]],
+    ["External systems", "own", ["External Systems"], [], [], ["project MCPs / CLIs"]],
+  ]],
+  ["Local", "Stays inside one craft.", [
+    ["Language style", "default", [], ["lingua-typescript-style"], ["Code Linting", "Formatting", "Typechecking"], []],
+    ["Testing", "default", [], ["lingua-tests"], ["Unit Tests", "x:Integration Tests"], []],
+    ["Repo structure", "default", ["Repo Structure"], ["x:lingua-repo-structure", "x:lingua-add-a-package"], ["x:Structural Linting"], []],
+    ["Design Reference", "default", ["Design Reference"], [], [], []],
+    ["Code workflow", "default", [], ["lingua-code-workflow", "x:lingua-land-work"], ["x:Commit & PR Title Checks"], []],
+    ["Releases", "default", ["Releases"], ["x:lingua-release"], [], []],
+    ["Builds", "default", ["Builds"], [], [], []],
+    ["Module & API design", "extra", [], ["lingua-module-design", "lingua-public-apis"], [], []],
+    ["Framework styles", "extra", [], ["lingua-react-style", "lingua-css-style"], ["Code Linting"], []],
+    ["Accessibility", "extra", [], ["lingua-check-a11y"], [], []],
+    ["Security", "extra", [], [], ["Security Checks"], []],
+    ["Scaffolding", "own", [], ["scaffold-a-*"], [], []],
+  ]],
+];
+const TIER_NAME = { core: "Mandatory", default: "Mandatory (+BYO)", extra: "Optional", own: "At will" };
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const DESC = {
+  "Domain language": "One name per concept. A glossary of terms, with the words to avoid, and rules to use them.",
+  "Knowledge structure": "Where knowledge lives and how it is written for agents. Keeps the Knowledge Base readable and current.",
+  "Reasoning": "Why things are as they are. Constraints and decision records.",
+  "Spec format": "How a specification is written, so agents and humans read it the same way.",
+  "Reverse Prompting": "The agent asks open questions one at a time, with its recommended answer, before it acts.",
+  "DoR": "When a ticket is ready to start. A project-owned list, and a gate that checks it.",
+  "DoD": "When work is done. A project-owned list, and a gate that checks it.",
+  "Change review": "Checks each diff against every ambient skill that applies. The backstop for skills that did not fire.",
+  "Agent entry point": "The first file an agent reads. Says the project follows Lingua Franca and where to find the rest.",
+  "Design intake": "Takes designs from Figma into code, and checks the result against the design.",
+  "Ticket intake": "Writes tickets and implements them, connected to the ticketing system.",
+  "External systems": "The systems outside the repo that the project talks to, and the tools to reach them.",
+  "Language style": "Rules for the programming language, enforced by linting, formatting and typechecking.",
+  "Testing": "How tests are written and what they cover.",
+  "Repo structure": "What exists in the repo, and where new things go.",
+  "Design Reference": "What the design system is.",
+  "Code workflow": "Commit rules and format, worktrees, and when to open a PR.",
+  "Releases": "How versions are released.",
+  "Builds": "How the project is built.",
+  "Module & API design": "Rules for code modules and public APIs.",
+  "Framework styles": "Rules for frameworks, such as React and CSS.",
+  "Accessibility": "Checks the UI for accessibility.",
+  "Security": "Scans code and dependencies for known security issues.",
+  "Scaffolding": "Project-owned skills that create new files from templates.",
+};
+const LAYERS = ["Context", "Skills", "Guardrails", "Tools"];
+const pill = (raw, tier) => { const x = raw.startsWith("x:"); return el("span", "p " + (x ? "extra" : tier), x ? raw.slice(2) : raw); };
+const sd = document.querySelector(".slotdesc");
+for (const [fam, blurb, mods] of FAMILIES) {
+  const h = el("div", "fam"); h.append(el("b", null, fam)); sd.append(h);
+  const g = el("div", "grid");
+  for (const [name, tier, ...cols] of mods) {
+    const c = el("article", "card");
+    const t = el("h4", null, name); t.append(el("small", null, TIER_NAME[tier]));
+    const ly = el("div", "ly");
+    cols.forEach((pieces, i) => {
+      if (!pieces.length) return;
+      const r = el("div", "row"); pieces.forEach(pc => r.append(pill(pc, tier)));
+      ly.append(el("span", null, LAYERS[i]), r);
+    });
+    c.append(t, el("p", null, DESC[name]), ly); g.append(c);
+  }
+  sd.append(g);
+}
+</script>
+</body>
+</html>
