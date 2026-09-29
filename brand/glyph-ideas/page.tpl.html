@@ -1,0 +1,60 @@
+<title>Lingua Franca Glyphs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&display=swap">
+<style>
+/* Layout: a header, then four glyph sheets in two columns. Each sheet is a specimen tile over its notes and small sizes. */
+:root {
+  --bg: #e6e9e4;
+  --tile: #f5f6f2;
+  --fg: #141a2e;
+  --muted: #566078;
+  --line: #c6ccc6;
+  --g0: #141a2e;
+  --g1: #2d3f8f;
+  --g2: #4fa39a;
+  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --body: "IBM Plex Sans", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0f16; --tile: #141926; --fg: #e9edf6; --muted: #98a2b8; --line: #262d3d;
+    --g0: #eef1fa; --g1: #93a9ff; --g2: #4fa39a; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0f16; --tile: #141926; --fg: #e9edf6; --muted: #98a2b8; --line: #262d3d;
+  --g0: #eef1fa; --g1: #93a9ff; --g2: #4fa39a; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--body); font-size: 15px; line-height: 1.55;
+  padding-inline: max(16px, 4vw); padding-block: 40px 56px; }
+.wrap { max-width: 1040px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+header { display: grid; gap: 10px; max-width: 60ch; }
+.ipa { font-family: var(--mono); font-size: 13px; letter-spacing: .04em; color: var(--muted); }
+h1 { font-family: var(--display); font-weight: 400; font-size: clamp(2.6rem, 7vw, 4.2rem); line-height: 1; margin: 0; text-wrap: balance; }
+header p { margin: 0; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 32px 28px; }
+.card { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.tile { background: var(--tile); border-radius: 22px; border: 1px solid var(--line); aspect-ratio: 1; max-width: 100%; display: grid; }
+.tile svg, .ico svg { width: 100%; height: 100%; display: block; }
+.meta { display: grid; gap: 8px; min-width: 0; }
+h2 { font-family: var(--display); font-weight: 400; font-size: 2rem; line-height: 1.1; margin: 0; }
+.meta p { margin: 0; max-width: 56ch; }
+.verdict { color: var(--muted); font-size: 13.5px; }
+.sizes { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; padding-top: 14px; margin-top: 6px; border-top: 1px solid var(--line); }
+.lockup { display: flex; align-items: center; gap: 12px; }
+.lockup .ico { width: 44px; height: 44px; }
+.word { font-family: var(--display); font-size: 1.7rem; line-height: 1; letter-spacing: .005em; }
+.ico { display: block; flex: none; }
+.s32 { width: 32px; height: 32px; }
+</style>
+<div class="wrap">
+  <header>
+    <span class="ipa">/ˈlɪŋɡwə ˈfɹæŋkə/</span>
+    <h1>Lingua Franca glyphs</h1>
+    <p>Four invented signs, each solid at the top left and breaking into pieces toward the bottom right. None is a real letter. They read as writing you have not learned yet.</p>
+  </header>
+  <main class="grid">
+<!--CARDS-->
+  </main>
+</div>
